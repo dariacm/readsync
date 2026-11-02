@@ -40,6 +40,8 @@ ElevenLabs' [text-to-speech with timestamps](https://elevenlabs.io/docs/api-refe
 
 Long texts are split into chunks of whole sentences with `Intl.Segmenter`: a small first chunk so playback starts quickly, then chunks of about 800 characters. The client generates the chunk being played and the one after it, passes the neighbouring chunks to ElevenLabs as `previous_text` and `next_text` so the intonation carries across, and maps each chunk's word timings back onto the full text.
 
+Diagrams of how the pieces fit together, and of what happens during one reading, are in [docs/architecture.md](docs/architecture.md).
+
 ## Project layout 🏯
 
 ```
