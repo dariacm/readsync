@@ -5,6 +5,7 @@ Notes from building ReadSync, mostly about how ElevenLabs behaves.
 ## Timing and alignment
 
 - **Timestamps come per character, in two versions.** The response has `alignment`, which maps to the text as written, and `normalized_alignment`, which maps to the text as spoken (for example "£12" → "twelve pounds"). ReadSync uses `alignment`, so the highlight stays on the reader's own words even when the voice says more.
+- **Emojis are silent but stay in the timings.** The voice skips them, while `alignment` keeps each one with zero duration, starting when the next word starts. Composite emojis like 👩‍💻 arrive split into their parts (👩, a zero-width joiner, 💻) but join back into the original text, so highlight offsets stay correct. Because a standalone emoji starts at the same moment as the next word, the highlight goes straight to that word and never rests on the emoji. Silence is a deliberate default: screen readers announce emoji names, but in a read-along "party popper" would mostly be noise. A "describe emojis" setting could cover texts where an emoji carries meaning.
 - **Whitespace isn't a universal word boundary.** Splitting on spaces works for English, French or German, but treats a whole Japanese sentence as one word. `Intl.Segmenter` is the planned fix.
 
 ## Text normalization and pronunciation

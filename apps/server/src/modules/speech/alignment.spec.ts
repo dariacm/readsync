@@ -27,6 +27,21 @@ describe("toWordTimings", () => {
     expect(words[1]!.charStart).toBe(8);
   });
 
+  it("keeps emojis, which ElevenLabs aligns per code point with zero duration", () => {
+    // Shape of a real response: 👩‍💻 arrives as three entries (👩, zero-width joiner, 💻).
+    const alignment: CharacterAlignment = {
+      characters: ["H", "i", " ", "🎉", " ", "👩", "‍", "💻", " ", "o", "k"],
+      characterStartTimesSeconds: [0, 0.1, 0.2, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.4],
+      characterEndTimesSeconds: [0.1, 0.2, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.4, 0.5],
+    };
+    const text = alignment.characters.join("");
+    const words = toWordTimings(alignment);
+
+    expect(words.map((w) => w.text)).toEqual(["Hi", "🎉", "👩‍💻", "ok"]);
+    words.forEach((w) => expect(text.slice(w.charStart, w.charEnd)).toBe(w.text));
+    expect(words[1]).toMatchObject({ startSec: 0.3, endSec: 0.3 });
+  });
+
   it("returns no words for empty or whitespace-only input", () => {
     expect(toWordTimings(alignmentFor(""))).toEqual([]);
     expect(toWordTimings(alignmentFor("  \n"))).toEqual([]);
