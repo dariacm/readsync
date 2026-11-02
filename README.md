@@ -10,6 +10,8 @@ Paste text, and ReadSync reads it aloud with an [ElevenLabs](https://elevenlabs.
 
 <sub>Recorded in [demo mode](#try-the-demo-no-api-key-needed-voice-by-elevenlabsio), which you can run without an API key. Voice by elevenlabs.io.</sub>
 
+▶️ **[Watch the video walkthrough](https://www.loom.com/share/2b745d8b9ce24e93aff844c776d3a153)**: a demo, how it works, and what I learned along the way.
+
 ## Why 💡
 
 For many readers, a page of text is the hard part, not the ideas in it. People with dyslexia spend effort decoding words and keeping their place in a line; people with low vision lose track of where they are as they move across a page. Listening alone helps, but it gives up the text: readers can't see how a word is spelled, skim back, or follow at their own pace.
