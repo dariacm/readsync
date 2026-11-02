@@ -38,6 +38,12 @@ export const speakResponseSchema = z.object({
   words: z.array(wordTimingSchema),
 });
 
+/** Returned by GET /api/demo when the server runs in demo mode. */
+export const demoResponseSchema = z.object({
+  /** The one text demo mode can read, from the recorded fixture. */
+  text: z.string(),
+});
+
 export const errorResponseSchema = z.object({
   error: z.string(),
 });
@@ -46,3 +52,4 @@ export type SpeakRequest = z.input<typeof speakRequestSchema>;
 export type WordTiming = z.infer<typeof wordTimingSchema>;
 export type SpeakResponse = z.infer<typeof speakResponseSchema>;
 export type ErrorResponse = z.infer<typeof errorResponseSchema>;
+export type DemoResponse = z.infer<typeof demoResponseSchema>;

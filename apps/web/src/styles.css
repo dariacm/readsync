@@ -362,6 +362,25 @@ textarea {
   border-radius: 12px;
 }
 
+.notice.demo {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.125rem;
+  margin: 0;
+  border: 1px solid var(--border);
+  background: var(--surface-muted);
+  font-size: 0.9375rem;
+}
+
+.notice.demo a {
+  color: inherit;
+  text-underline-offset: 2px;
+}
+
+.composer textarea[readonly] {
+  color: var(--muted);
+}
+
 .notice.error {
   background: var(--danger-bg);
   color: var(--danger);

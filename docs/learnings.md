@@ -24,6 +24,11 @@ Notes from building ReadSync, mostly about how ElevenLabs behaves.
 - **A request is paid for the moment it's sent.** I measured it with the account's character counter: a request cut off after 0.25 seconds, before any audio came back, was still charged for every character (77 of 77). The counter only updates 30–45 seconds later, which makes it easy to conclude the opposite from a quick check. So cancelling doesn't save credits; not sending does. The server still drops the ElevenLabs call when the browser disconnects, which saves it waiting on and downloading audio nobody will hear, but the levers on cost are elsewhere: how far ahead to generate (one chunk, so stopping early wastes at most one), and never sending the same request twice.
 - **Deduplicate requests instead of cancelling them.** React StrictMode mounts components twice in development, so the reader requested its first two chunks twice on every text, and the aborted duplicates were charged in full. The client now sends each distinct request once and shares the in-flight result: StrictMode's second mount reuses the first mount's requests, and reading the same text again replays from memory without any request. The cache keys on the chunk and its neighbouring text and holds the last 20 chunks, with failed requests dropped so "Try again" sends a new one.
 
+## Demo mode
+
+- **A recorded fixture makes the demo free and repeatable.** The real responses for one sample text (audio and word timings per chunk) are recorded once and replayed by the server, so the demo needs no API key and spends no credits, and behaves exactly like the live app. Recordings are keyed on each chunk together with its context, because the same sentence with different neighbours is a different request; the recording script splits the text with the same function as the browser so the keys match.
+- **Free-plan audio comes with conditions.** ElevenLabs' free plan only allows non-commercial use, and publishing its audio requires "elevenlabs.io" or "11.ai" in the title, so the demo's README heading, the in-app notice and any demo video carry that attribution.
+
 ## API keys
 
 - **Restricted API keys need every feature they touch.** A key scoped to Text to Speech fails as soon as a request references a pronunciation dictionary, so the key also needs the Pronunciation Dictionaries permission.

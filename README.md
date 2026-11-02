@@ -4,6 +4,10 @@ A read-along reader for people with **dyslexia** or **low vision**, built to wor
 
 Paste text, and ReadSync reads it aloud with an [ElevenLabs](https://elevenlabs.io) voice while highlighting each word as it is spoken. Click any word to jump there.
 
+![Screen recording of ReadSync in demo mode: a paragraph about Kimi Antonelli is read aloud while each word is highlighted as it is spoken.](docs/demo.gif)
+
+<sub>Recorded in [demo mode](#try-the-demo-no-api-key-needed-voice-by-elevenlabsio), which you can run without an API key. Voice by elevenlabs.io.</sub>
+
 ## Why 💡
 
 For many readers, a page of text is the hard part, not the ideas in it. People with dyslexia spend effort decoding words and keeping their place in a line; people with low vision lose track of where they are as they move across a page. Listening alone helps, but it gives up the text: readers can't see how a word is spelled, skim back, or follow at their own pace.
@@ -49,11 +53,21 @@ packages/
 
 Requires Node 26.12.1+ and pnpm.
 
+### Try the demo, no API key needed (voice by elevenlabs.io)
+
 ```bash
-nvm use                                        # picks up the version in .nvmrc
+nvm use        # picks up the version in .nvmrc
 pnpm install
+pnpm dev:demo  # API on :8787, web on :5173
+```
+
+Open http://localhost:5173 and press **Read aloud**. Demo mode replays a sample that was recorded once from ElevenLabs ([`fixtures/demo.json`](apps/server/fixtures/demo.json)): real audio and word timings, so the reader behaves exactly as it does live, but nothing calls ElevenLabs and only the sample text can be read. The audio was generated with elevenlabs.io on the free plan, which allows non-commercial use with attribution.
+
+### Run it with your own API key
+
+```bash
 cp apps/server/.env.example apps/server/.env   # then add your ElevenLabs API key
-pnpm dev                                       # API on :8787, web on :5173
+pnpm dev
 ```
 
 Open http://localhost:5173.
@@ -70,12 +84,14 @@ The rules live in [`pronunciationRules.ts`](apps/server/src/modules/speech/pronu
 
 ## Scripts 🤖
 
-| Command                                               | What it does                                              |
-| ----------------------------------------------------- | --------------------------------------------------------- |
-| `pnpm dev`                                            | Run the API and web app in watch mode                     |
-| `pnpm test`                                           | Run the tests                                             |
-| `pnpm typecheck`                                      | Type-check every package                                  |
-| `pnpm --filter @readsync/server dictionary:create en` | Create a language's abbreviation dictionary in ElevenLabs |
+| Command                                               | What it does                                                                                |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `pnpm dev`                                            | Run the API and web app in watch mode                                                       |
+| `pnpm dev:demo`                                       | Same, replaying the recorded sample; no API key needed (macOS/Linux shells)                 |
+| `pnpm test`                                           | Run the tests                                                                               |
+| `pnpm typecheck`                                      | Type-check every package                                                                    |
+| `pnpm --filter @readsync/server dictionary:create en` | Create a language's abbreviation dictionary in ElevenLabs                                   |
+| `pnpm --filter @readsync/server demo:record`          | Re-record the demo sample from ElevenLabs (uses credits; `--dry-run` shows the chunks only) |
 
 ## Learnings 🧠
 

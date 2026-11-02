@@ -8,6 +8,7 @@
   "packageManager": "pnpm@11.25.0",
   "scripts": {
     "dev": "pnpm --parallel -r dev",
+    "dev:demo": "pnpm --parallel -r dev:demo",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck"
   }
