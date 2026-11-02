@@ -10,7 +10,7 @@ Paste text, and ReadSync reads it aloud with an [ElevenLabs](https://elevenlabs.
 
 <sub>Recorded in [demo mode](#try-the-demo-no-api-key-needed-voice-by-elevenlabsio), which you can run without an API key. Voice by [elevenlabs.io](https://elevenlabs.io/).</sub>
 
-▶️ **[Watch the video walkthrough](https://www.loom.com/share/2b745d8b9ce24e93aff844c776d3a153)**: a demo, how it works, and what I learned along the way.
+▶️ **[Watch the video walkthrough](https://www.loom.com/share/a4f023ae0a90474b9652d0c25d3a951e)**: a demo, how it works, and what I learned along the way.
 
 ## Why 💡
 
