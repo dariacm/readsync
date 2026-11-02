@@ -251,6 +251,7 @@ textarea {
 
 .reader {
   overflow: clip;
+  scroll-margin-top: 1rem;
 }
 
 .player {

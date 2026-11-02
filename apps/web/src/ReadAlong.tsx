@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import type { TextChunk } from "@readsync/shared";
 import { NextIcon, PauseIcon, PlayIcon, PreviousIcon } from "./icons";
 import { SPEEDS } from "./playbackSpeed";
@@ -13,6 +13,16 @@ interface ReadAlongProps {
 
 export function ReadAlong({ text, chunks, speed, onSpeedChange }: ReadAlongProps) {
   const reader = useChunkedReader(text, chunks, speed);
+  const sectionRef = useRef<HTMLElement>(null);
+  const playButtonRef = useRef<HTMLButtonElement>(null);
+
+  // A new text mounts a new player: bring it into view and move focus to play/pause, so readers
+  // don't have to scroll down from the text box, and keyboard users can pause with Space right away.
+  useEffect(() => {
+    const smooth = !globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    playButtonRef.current?.focus({ preventScroll: true });
+    sectionRef.current?.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+  }, []);
 
   // Hold the bar where it was while the next part loads (no word is active then).
   const progressRef = useRef(0);
@@ -39,7 +49,7 @@ export function ReadAlong({ text, chunks, speed, onSpeedChange }: ReadAlongProps
   const playLabel = reader.isPlaying ? "Pause" : "Play";
 
   return (
-    <section className="card reader" aria-label="Read-along">
+    <section ref={sectionRef} className="card reader" aria-label="Read-along">
       <audio ref={reader.audioRef} preload="auto" />
 
       <div className="player">
@@ -47,7 +57,14 @@ export function ReadAlong({ text, chunks, speed, onSpeedChange }: ReadAlongProps
           <button type="button" className="icon-button" onClick={reader.previousSentence} aria-label="Previous sentence" title="Previous sentence">
             <PreviousIcon />
           </button>
-          <button type="button" className="icon-button play" onClick={reader.togglePlay} aria-label={playLabel} title={playLabel}>
+          <button
+            ref={playButtonRef}
+            type="button"
+            className="icon-button play"
+            onClick={reader.togglePlay}
+            aria-label={playLabel}
+            title={playLabel}
+          >
             {reader.isPlaying ? <PauseIcon /> : <PlayIcon />}
           </button>
           <button type="button" className="icon-button" onClick={reader.nextSentence} aria-label="Next sentence" title="Next sentence">
