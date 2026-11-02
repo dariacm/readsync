@@ -1,5 +1,7 @@
 # ReadSync 📖
 
+[![CI](https://github.com/dariacm/readsync/actions/workflows/ci.yml/badge.svg)](https://github.com/dariacm/readsync/actions/workflows/ci.yml)
+
 A read-along reader for people with **dyslexia** or **low vision**, built to work across languages.
 
 Paste text, and ReadSync reads it aloud with an [ElevenLabs](https://elevenlabs.io) voice while highlighting each word as it is spoken. Click any word to jump there.
