@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { MAX_TEXT_LENGTH, splitIntoChunks, type TextChunk } from "@readsync/shared";
-import { PlayIcon, WaveIcon } from "./icons";
+import { MoonIcon, PlayIcon, SunIcon, WaveIcon } from "./icons";
 import { loadSpeed, saveSpeed } from "./playbackSpeed";
 import { ReadAlong } from "./ReadAlong";
+import { useTheme } from "./theme";
 
 interface Session {
   id: number;
@@ -15,6 +16,8 @@ export function App() {
   const [session, setSession] = useState<Session | null>(null);
   // Lives here, not in the player, so a chosen speed carries over to the next text (and visit).
   const [speed, setSpeed] = useState(loadSpeed);
+  const { theme, toggleTheme } = useTheme();
+  const themeLabel = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
 
   const changeSpeed = (value: number) => {
     setSpeed(value);
@@ -31,9 +34,14 @@ export function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <div className="brand">
-          <WaveIcon className="brand-mark" />
-          ReadSync
+        <div className="topbar-inner">
+          <div className="brand">
+            <WaveIcon className="brand-mark" />
+            ReadSync
+          </div>
+          <button type="button" className="icon-button" onClick={toggleTheme} aria-label={themeLabel} title={themeLabel}>
+            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+          </button>
         </div>
       </header>
 

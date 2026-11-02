@@ -47,3 +47,18 @@ export const WaveIcon = (props: IconProps) => (
     <rect x="20.6" y="10" width="2.4" height="4" rx="1.2" />
   </Icon>
 );
+
+export const SunIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <circle cx="12" cy="12" r="4.25" />
+    <g stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.28 5.28l1.41 1.41M17.31 17.31l1.41 1.41M5.28 18.72l1.41-1.41M17.31 6.69l1.41-1.41" />
+    </g>
+  </Icon>
+);
+
+export const MoonIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M20.2 14.6A8.5 8.5 0 0 1 9.4 3.8a.6.6 0 0 0-.79-.72A9.5 9.5 0 1 0 20.92 15.4a.6.6 0 0 0-.72-.8Z" />
+  </Icon>
+);

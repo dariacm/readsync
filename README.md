@@ -19,7 +19,7 @@ Today, the reader:
 - Lets readers pause, move by sentence, change the speed (0.75× to 1.5×, remembered between texts and visits) and jump to any word.
 - Uses an off-white background, larger text, and wider letter, word and line spacing, which many dyslexic readers find easier than dense black-on-white text.
 - Keeps line breaks from the original text, and shows a clear focus outline for keyboard users.
-- Follows the system's dark mode (with a dark grey reading area rather than black, to reduce glare) and reduced-motion settings, and keeps the player controls in view while scrolling a long text.
+- Has a light/dark toggle that follows the system until changed and remembers the choice (dark mode uses a dark grey reading area rather than black, to reduce glare), respects reduced-motion settings, and keeps the player controls in view while scrolling a long text.
 - Expands numbers, currencies and common abbreviations into natural speech ("£3,500.75", "i.e.").
 
 Known gaps:

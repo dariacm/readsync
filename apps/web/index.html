@@ -6,6 +6,14 @@
     <meta name="color-scheme" content="light dark" />
     <meta name="description" content="A read-along reader for people with dyslexia or low vision." />
     <title>ReadSync</title>
+    <script>
+      // Apply the saved theme (see src/theme.ts) before the first paint, so dark mode doesn't flash light.
+      try {
+        const saved = localStorage.getItem("readsync:theme");
+        document.documentElement.dataset.theme =
+          saved === "light" || saved === "dark" ? saved : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      } catch {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
