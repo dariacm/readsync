@@ -15,16 +15,26 @@ export class ElevenLabsSpeechService implements SpeechService {
   ) {}
 
   async speak(text: string, voiceId = this.config.voiceId): Promise<SpeakResponse> {
+    const { modelId, pronunciationDictionaryIds } = this.config;
+    // Texts are treated as English until the reader lets users pick a language.
+    const pronunciationDictionaryId = pronunciationDictionaryIds.en;
+
     let result;
     try {
       result = await this.client.textToSpeech.convertWithTimestamps(voiceId, {
         text,
-        modelId: this.config.modelId,
+        modelId,
+        // "auto" can leave currencies half-read ("3,500.75" without "pounds"); "on" always expands them.
+        applyTextNormalization: "on",
+        pronunciationDictionaryLocators: pronunciationDictionaryId
+          ? [{ pronunciationDictionaryId }]
+          : undefined,
       });
     } catch (err) {
       throw new PublicError("Speech generation failed.", 502, { cause: err });
     }
 
+    // `alignment` maps to the text as written, not as spoken, so highlights stay on the user's original words.
     if (!result.alignment) {
       throw new PublicError("No timing data returned for this text.", 502);
     }

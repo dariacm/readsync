@@ -6,7 +6,8 @@
     "dev": "tsx watch --env-file=.env src/server.ts",
     "start": "tsx --env-file=.env src/server.ts",
     "test": "vitest run",
-    "typecheck": "tsc -p ."
+    "typecheck": "tsc -p .",
+    "dictionary:create": "tsx --env-file=.env scripts/createPronunciationDictionary.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
