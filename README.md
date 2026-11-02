@@ -8,7 +8,7 @@ Paste text, and ReadSync reads it aloud with an [ElevenLabs](https://elevenlabs.
 
 ![Screen recording of ReadSync in demo mode: a paragraph about Kimi Antonelli is read aloud while each word is highlighted as it is spoken.](docs/demo.gif)
 
-<sub>Recorded in [demo mode](#try-the-demo-no-api-key-needed-voice-by-elevenlabsio), which you can run without an API key. Voice by elevenlabs.io.</sub>
+<sub>Recorded in [demo mode](#try-the-demo-no-api-key-needed-voice-by-elevenlabsio), which you can run without an API key. Voice by [elevenlabs.io](https://elevenlabs.io/).</sub>
 
 ▶️ **[Watch the video walkthrough](https://www.loom.com/share/2b745d8b9ce24e93aff844c776d3a153)**: a demo, how it works, and what I learned along the way.
 
@@ -37,6 +37,13 @@ Known gaps:
 - Reading settings aren't adjustable yet: font, text size, line focus, and colours such as the highlight style and background, which would help readers with colour vision deficiency or who need higher contrast.
 - Abbreviation rules exist for English only, and words are split on spaces, which doesn't work for languages like Japanese.
 - Texts are limited to 20,000 characters, as a guard on credits.
+
+## Next 🔮
+
+- **Multilingual support:** a language picker that chooses a matching voice and that language's abbreviation rules, word splitting with `Intl.Segmenter` so languages without spaces (like Japanese) highlight word by word, and a translated interface.
+- **Colour vision deficiency and contrast:** reading settings with highlight styles that don't depend on colour (underline, outline, inverted), high-contrast and tinted colour themes, plus font, text size and a line-focus mode.
+- **Voices and tones:** choosing from different voices and tones, from calm and slow to lively, so readers can pick the one they find easiest to follow.
+- **PDF and e-book upload:** reading PDFs and e-books (such as EPUB) directly, keeping chapters and paragraphs, and remembering where the reader left off. Longer texts would also need audio caching across visits, to avoid paying for the same pages twice.
 
 ## How it works 👩‍🔬
 
