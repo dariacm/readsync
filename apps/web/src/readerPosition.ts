@@ -30,6 +30,11 @@ export function previousSentenceStart(
   return sentenceStarts[current - 1];
 }
 
+/** Zero-based index of the sentence containing `position` (0 before the first sentence). */
+export function sentenceIndexAt(sentenceStarts: number[], position: number): number {
+  return Math.max(0, sentenceStarts.findLastIndex((start) => start <= position));
+}
+
 export function nextSentenceStart(sentenceStarts: number[], position: number): number | undefined {
   return sentenceStarts.find((start) => start > position);
 }

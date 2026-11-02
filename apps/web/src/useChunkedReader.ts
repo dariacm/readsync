@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { tokenize, type TextChunk, type WordTiming } from "@readsync/shared";
 import { base64ToAudioUrl } from "./api";
-import { chunkIndexAt, nextSentenceStart, previousSentenceStart, startTimeAt } from "./readerPosition";
+import { chunkIndexAt, nextSentenceStart, previousSentenceStart, sentenceIndexAt, startTimeAt } from "./readerPosition";
 import { speakOnce } from "./speechCache";
 import { useActiveWord } from "./useActiveWord";
 
@@ -231,7 +231,8 @@ export function useChunkedReader(text: string, chunks: TextChunk[], speed: numbe
     isLoading: wantsToPlay && currentState?.status !== "ready" && currentState?.status !== "error",
     error: currentState?.status === "error" ? currentState.message : undefined,
     retry: () => load(current),
-    part: { current: current + 1, total: chunks.length },
+    // Chunks are an internal detail; readers see their position in sentences.
+    sentence: { current: sentenceIndexAt(sentenceStarts, position) + 1, total: sentenceStarts.length },
     togglePlay,
     previousSentence,
     nextSentence,

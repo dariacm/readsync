@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TextChunk, WordTiming } from "@readsync/shared";
-import { chunkIndexAt, nextSentenceStart, previousSentenceStart, startTimeAt } from "./readerPosition";
+import { chunkIndexAt, nextSentenceStart, previousSentenceStart, sentenceIndexAt, startTimeAt } from "./readerPosition";
 
 const chunks: TextChunk[] = [
   { text: "One. Two.", charStart: 0, sentenceStarts: [0, 5] },
@@ -44,6 +44,13 @@ describe("sentence navigation", () => {
 
   it("stays on the first sentence", () => {
     expect(previousSentenceStart(starts, 2, 0.2)).toBe(0);
+  });
+
+  it("finds the sentence containing a position", () => {
+    expect(sentenceIndexAt(starts, 0)).toBe(0);
+    expect(sentenceIndexAt(starts, 7)).toBe(1);
+    expect(sentenceIndexAt(starts, 11)).toBe(2);
+    expect(sentenceIndexAt([3, 8], 0)).toBe(0);
   });
 
   it("finds the next sentence, if any", () => {
