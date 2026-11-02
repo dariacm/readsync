@@ -1,14 +1,37 @@
-# readsync
+# ReadSync 📖
 
-ReadSync: a read-along reader for dyslexia and low vision, in any language.
+A read-along reader for people with **dyslexia** or **low vision**, built to work across languages.
 
 Paste text, and ReadSync reads it aloud with an [ElevenLabs](https://elevenlabs.io) voice while highlighting each word as it is spoken. Click any word to jump there.
 
-## How it works
+## Why 💡
+
+For many readers, a page of text is the hard part, not the ideas in it. People with dyslexia spend effort decoding words and keeping their place in a line; people with low vision lose track of where they are as they move across a page. Listening alone helps, but it gives up the text: readers can't see how a word is spelled, skim back, or follow at their own pace.
+
+ReadSync combines the two. The voice carries the reading, and the moving highlight ties every spoken word to the written one, so readers keep their place, see each word as they hear it, and can slow down, jump back or replay at will. The same pairing helps language learners connect pronunciation with spelling, which is why working across languages matters as much as the voice itself.
+
+## What it does 📋
+
+Today, the reader:
+
+- Highlights the word being spoken, in sync with the audio.
+- Lets readers change the speed (0.75× to 1.5×) and jump to any word.
+- Uses an off-white background, larger text, and wider letter, word and line spacing, which many dyslexic readers find easier than dense black-on-white text.
+- Keeps line breaks from the original text, and shows a clear focus outline for keyboard users.
+- Expands numbers, currencies and common abbreviations into natural speech ("£3,500.75", "i.e.").
+
+Known gaps:
+
+- Jumping to a word works with a mouse only; words aren't reachable by keyboard yet.
+- Reading settings (font, size, colours, line focus) aren't adjustable yet.
+- Abbreviation rules exist for English only, and words are split on spaces, which doesn't work for languages like Japanese.
+- Texts are limited to 5,000 characters.
+
+## How it works 👩‍🔬
 
 ElevenLabs' [text-to-speech with timestamps](https://elevenlabs.io/docs/api-reference/text-to-speech/convert-with-timestamps) endpoint returns the audio together with a start and end time for every character. The server groups those character timings into words; the client follows the audio's playback position on every animation frame and highlights the word being spoken.
 
-## Project layout
+## Project layout 🏯
 
 ```
 apps/
@@ -18,11 +41,12 @@ packages/
   shared/   Zod schemas and types for the API, used by both sides
 ```
 
-## Getting started
+## Getting started 🏃‍♀️
 
-Requires Node 26.12.1+ (`nvm use` picks it up from `.nvmrc`) and pnpm.
+Requires Node 26.12.1+ and pnpm.
 
 ```bash
+nvm use                                        # picks up the version in .nvmrc
 pnpm install
 cp apps/server/.env.example apps/server/.env   # then add your ElevenLabs API key
 pnpm dev                                       # API on :8787, web on :5173
@@ -30,10 +54,25 @@ pnpm dev                                       # API on :8787, web on :5173
 
 Open http://localhost:5173.
 
-## Scripts
+### Optional: abbreviation dictionary
 
-| Command          | What it does                          |
-| ---------------- | ------------------------------------- |
-| `pnpm dev`       | Run the API and web app in watch mode |
-| `pnpm test`      | Run the tests                         |
-| `pnpm typecheck` | Type-check every package              |
+ElevenLabs doesn't reliably expand abbreviations like "e.g." ("for example"). To make it consistent, create an English pronunciation dictionary once and add its ID to `apps/server/.env`. The API key needs the Pronunciation Dictionaries permission (read and write) in addition to Text to Speech.
+
+```bash
+pnpm --filter @readsync/server dictionary:create en
+```
+
+The rules live in [`pronunciationRules.ts`](apps/server/src/modules/speech/pronunciationRules.ts), keyed by language. Only English exists so far, and every text is treated as English. Running the script again creates a new dictionary, so update the ID after changing the rules.
+
+## Scripts 🤖
+
+| Command                                               | What it does                                              |
+| ----------------------------------------------------- | --------------------------------------------------------- |
+| `pnpm dev`                                            | Run the API and web app in watch mode                     |
+| `pnpm test`                                           | Run the tests                                             |
+| `pnpm typecheck`                                      | Type-check every package                                  |
+| `pnpm --filter @readsync/server dictionary:create en` | Create a language's abbreviation dictionary in ElevenLabs |
+
+## Learnings 🧠
+
+What I learned about ElevenLabs while building this, from text normalization to word timing, is in [docs/learnings.md](docs/learnings.md).
