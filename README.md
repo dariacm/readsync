@@ -18,7 +18,7 @@ ReadSync combines the two. The voice carries the reading, and the moving highlig
 
 Today, the reader:
 
-- Highlights the word being spoken, in sync with the audio.
+- Highlights the word being spoken, in sync with the audio, and underlined, so it doesn't rely on colour alone.
 - Reads long texts part by part: playback starts after the first sentence or two is ready, and the next part is generated while the current one plays.
 - Lets readers pause, move by sentence, change the speed (0.75× to 1.5×, remembered between texts and visits) and jump to any word.
 - Uses an off-white background, larger text, and wider letter, word and line spacing, which many dyslexic readers find easier than dense black-on-white text.
@@ -30,7 +30,7 @@ Today, the reader:
 Known gaps:
 
 - Jumping to a specific word needs a mouse; keyboard users can move by sentence, but not word by word.
-- Reading settings (font, size, colours, line focus) aren't adjustable yet.
+- Reading settings aren't adjustable yet: font, text size, line focus, and colours such as the highlight style and background, which would help readers with colour vision deficiency or who need higher contrast.
 - Abbreviation rules exist for English only, and words are split on spaces, which doesn't work for languages like Japanese.
 - Texts are limited to 20,000 characters, as a guard on credits.
 

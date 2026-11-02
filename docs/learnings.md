@@ -38,3 +38,7 @@ Notes from building ReadSync, mostly about how ElevenLabs behaves.
 
 - **Audio arrives as base64 inside JSON.** That lets audio and timings travel in one response, at the cost of a ~33% larger payload and no playback until the whole clip has arrived. Chunking keeps each clip short; streaming with timestamps could shorten the first wait further.
 - **`timeupdate` is too coarse for word sync.** It fires only a few times per second, so the client reads `currentTime` on every animation frame while audio plays.
+
+## Accessibility
+
+- **A highlight colour is not enough on its own.** The yellow highlight looks obvious, but measured against the off-white reading background it has a contrast ratio of only about 1.2:1, far below the 3:1 that WCAG asks for indicators like this. It works through hue alone, which fails readers with colour vision deficiency or low vision, and anyone on a washed-out screen. The active word is now also underlined, dark on yellow (about 13:1) in both themes, which still marks it in a fully greyscale view. In dark mode the yellow itself already stands out at about 13:1. A first attempt drew the line as an inset shadow, which curved with the highlight's rounded corners and, sitting on its bottom edge, blended into the dark background; a real text underline kept inside the highlight, with `text-decoration-skip-ink: none` so it runs straight through descenders, fixed both. Adjustable highlight styles and colour themes are the next step.

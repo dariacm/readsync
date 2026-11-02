@@ -412,9 +412,16 @@ textarea {
   background: var(--surface-muted);
 }
 
+/* The yellow alone has little contrast with the light reading background (about 1.2:1), so the
+   active word is also underlined: a cue that doesn't depend on seeing colour. The underline stays
+   inside the highlight, dark on yellow in both themes, and runs straight through descenders. */
 .word.active {
+  padding-block: 0.08em;
   background: var(--highlight);
   color: var(--on-highlight);
+  text-decoration: underline 0.1em var(--on-highlight);
+  text-underline-offset: 0.14em;
+  text-decoration-skip-ink: none;
 }
 
 /* Phones: buttons and speed on one row, progress below, so the sticky player stays compact. */
