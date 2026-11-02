@@ -38,3 +38,19 @@ export function sentenceIndexAt(sentenceStarts: number[], position: number): num
 export function nextSentenceStart(sentenceStarts: number[], position: number): number | undefined {
   return sentenceStarts.find((start) => start > position);
 }
+
+/** The word to move to for a navigation key, or null if the key doesn't move between words. */
+export function wordIndexForKey(key: string, index: number, count: number): number | null {
+  switch (key) {
+    case "ArrowRight":
+      return Math.min(index + 1, count - 1);
+    case "ArrowLeft":
+      return Math.max(index - 1, 0);
+    case "Home":
+      return 0;
+    case "End":
+      return count - 1;
+    default:
+      return null;
+  }
+}

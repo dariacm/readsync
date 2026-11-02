@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { TextChunk, WordTiming } from "@readsync/shared";
-import { chunkIndexAt, nextSentenceStart, previousSentenceStart, sentenceIndexAt, startTimeAt } from "./readerPosition";
+import {
+  chunkIndexAt,
+  nextSentenceStart,
+  previousSentenceStart,
+  sentenceIndexAt,
+  startTimeAt,
+  wordIndexForKey,
+} from "./readerPosition";
 
 const chunks: TextChunk[] = [
   { text: "One. Two.", charStart: 0, sentenceStarts: [0, 5] },
@@ -56,5 +63,24 @@ describe("sentence navigation", () => {
   it("finds the next sentence, if any", () => {
     expect(nextSentenceStart(starts, 5)).toBe(11);
     expect(nextSentenceStart(starts, 11)).toBeUndefined();
+  });
+});
+
+describe("wordIndexForKey", () => {
+  it("moves one word left or right, stopping at the ends", () => {
+    expect(wordIndexForKey("ArrowRight", 2, 5)).toBe(3);
+    expect(wordIndexForKey("ArrowLeft", 2, 5)).toBe(1);
+    expect(wordIndexForKey("ArrowRight", 4, 5)).toBe(4);
+    expect(wordIndexForKey("ArrowLeft", 0, 5)).toBe(0);
+  });
+
+  it("jumps to the first or last word", () => {
+    expect(wordIndexForKey("Home", 3, 5)).toBe(0);
+    expect(wordIndexForKey("End", 1, 5)).toBe(4);
+  });
+
+  it("ignores other keys", () => {
+    expect(wordIndexForKey("Enter", 2, 5)).toBeNull();
+    expect(wordIndexForKey("a", 2, 5)).toBeNull();
   });
 });

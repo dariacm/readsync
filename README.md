@@ -28,12 +28,12 @@ Today, the reader:
 - Uses an off-white background, larger text, and wider letter, word and line spacing, which many dyslexic readers find easier than dense black-on-white text.
 - Keeps line breaks from the original text, and shows a clear focus outline for keyboard users.
 - Scrolls to the reader and moves focus to play/pause when reading starts, so keyboard users can pause with Space right away.
+- Works fully from the keyboard: the text is a single Tab stop that lands on the word being read; the arrow keys, Home and End move between words, Enter reads from the focused word, and Space pauses or resumes, so keyboard users never have to leave the text.
 - Has a light/dark toggle that follows the system until changed and remembers the choice (dark mode uses a dark grey reading area rather than black, to reduce glare), respects reduced-motion settings, and keeps the player controls in view while scrolling a long text.
 - Expands numbers, currencies and common abbreviations into natural speech ("£3,500.75", "i.e.").
 
 Known gaps:
 
-- Jumping to a specific word needs a mouse; keyboard users can move by sentence, but not word by word.
 - Reading settings aren't adjustable yet: font, text size, line focus, and colours such as the highlight style and background, which would help readers with colour vision deficiency or who need higher contrast.
 - Abbreviation rules exist for English only, and words are split on spaces, which doesn't work for languages like Japanese.
 - Texts are limited to 20,000 characters, as a guard on credits.

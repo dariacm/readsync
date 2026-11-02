@@ -408,6 +408,15 @@ textarea {
   transition: background-color 120ms;
 }
 
+/* Keyboard focus scrolls a word into view; keep it clear of the sticky player above. */
+.word {
+  scroll-margin-block: 8rem 2rem;
+}
+
+.word:focus-visible {
+  outline-offset: 1px;
+}
+
 .word:hover {
   background: var(--surface-muted);
 }
