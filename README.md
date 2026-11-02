@@ -15,21 +15,24 @@ ReadSync combines the two. The voice carries the reading, and the moving highlig
 Today, the reader:
 
 - Highlights the word being spoken, in sync with the audio.
-- Lets readers change the speed (0.75× to 1.5×) and jump to any word.
+- Reads long texts part by part: playback starts after the first sentence or two is ready, and the next part is generated while the current one plays.
+- Lets readers pause, move by sentence, change the speed (0.75× to 1.5×, remembered between texts and visits) and jump to any word.
 - Uses an off-white background, larger text, and wider letter, word and line spacing, which many dyslexic readers find easier than dense black-on-white text.
 - Keeps line breaks from the original text, and shows a clear focus outline for keyboard users.
 - Expands numbers, currencies and common abbreviations into natural speech ("£3,500.75", "i.e.").
 
 Known gaps:
 
-- Jumping to a word works with a mouse only; words aren't reachable by keyboard yet.
+- Jumping to a specific word needs a mouse; keyboard users can move by sentence, but not word by word.
 - Reading settings (font, size, colours, line focus) aren't adjustable yet.
 - Abbreviation rules exist for English only, and words are split on spaces, which doesn't work for languages like Japanese.
-- Texts are limited to 5,000 characters.
+- Texts are limited to 20,000 characters, as a guard on credits.
 
 ## How it works 👩‍🔬
 
 ElevenLabs' [text-to-speech with timestamps](https://elevenlabs.io/docs/api-reference/text-to-speech/convert-with-timestamps) endpoint returns the audio together with a start and end time for every character. The server groups those character timings into words; the client follows the audio's playback position on every animation frame and highlights the word being spoken.
+
+Long texts are split into chunks of whole sentences with `Intl.Segmenter`: a small first chunk so playback starts quickly, then chunks of about 800 characters. The client generates the chunk being played and the one after it, passes the neighbouring chunks to ElevenLabs as `previous_text` and `next_text` so the intonation carries across, and maps each chunk's word timings back onto the full text.
 
 ## Project layout 🏯
 
@@ -38,7 +41,7 @@ apps/
   server/   Fastify API — keeps the ElevenLabs key server-side, turns character timings into word timings
   web/      Vite + React reader UI
 packages/
-  shared/   Zod schemas and types for the API, used by both sides
+  shared/   API schemas and types, plus the sentence chunking and word splitting, used by both sides
 ```
 
 ## Getting started 🏃‍♀️

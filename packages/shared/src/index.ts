@@ -1,14 +1,22 @@
 import { z } from "zod";
+import { MAX_CHUNK_LENGTH } from "./chunking.js";
 
-export const MAX_TEXT_LENGTH = 5000;
+export * from "./chunking.js";
+export * from "./tokenize.js";
+
+/** Limit for a whole text, which the reader generates chunk by chunk; mainly a guard on credits. */
+export const MAX_TEXT_LENGTH = 20_000;
 
 export const speakRequestSchema = z.object({
   text: z
     .string()
     .trim()
     .min(1, "Text is required.")
-    .max(MAX_TEXT_LENGTH, `Text must be at most ${MAX_TEXT_LENGTH} characters.`),
+    .max(MAX_CHUNK_LENGTH, `Text must be at most ${MAX_CHUNK_LENGTH} characters.`),
   voiceId: z.string().min(1).optional(),
+  /** Neighbouring chunks, which ElevenLabs uses to keep intonation continuous across requests. */
+  previousText: z.string().max(MAX_CHUNK_LENGTH).optional(),
+  nextText: z.string().max(MAX_CHUNK_LENGTH).optional(),
 });
 
 /** A word in the spoken text, with its position and timing in the audio. */

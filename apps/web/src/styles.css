@@ -57,3 +57,26 @@ button {
 .word.active {
   background: #ffe066;
 }
+
+.controls button {
+  padding: 0.4rem 0.9rem;
+}
+
+.controls .primary {
+  min-width: 6rem;
+  font-weight: 600;
+}
+
+.part,
+.hint {
+  font-size: 0.9rem;
+  color: #55555a;
+}
+
+.status {
+  min-height: 1.6em;
+}
+
+.status.error {
+  color: #b00020;
+}

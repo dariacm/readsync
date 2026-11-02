@@ -47,6 +47,7 @@ export function useActiveWord(audioRef: RefObject<HTMLAudioElement | null>, word
     audio.addEventListener("play", start);
     audio.addEventListener("pause", stop);
     audio.addEventListener("seeked", update);
+    audio.addEventListener("loadedmetadata", update);
     audio.addEventListener("ended", stop);
     update();
 
@@ -55,6 +56,7 @@ export function useActiveWord(audioRef: RefObject<HTMLAudioElement | null>, word
       audio.removeEventListener("play", start);
       audio.removeEventListener("pause", stop);
       audio.removeEventListener("seeked", update);
+      audio.removeEventListener("loadedmetadata", update);
       audio.removeEventListener("ended", stop);
     };
   }, [audioRef, words]);

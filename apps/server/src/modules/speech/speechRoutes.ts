@@ -11,6 +11,16 @@ export const speechRoutes: FastifyPluginAsyncZod<{ speechService: SpeechService 
         response: { 200: speakResponseSchema, "4xx": errorResponseSchema, "5xx": errorResponseSchema },
       },
     },
-    async (request) => speechService.speak(request.body.text, request.body.voiceId),
+    async (request, reply) => {
+      // Drop the ElevenLabs call if the client goes away. This frees the server, but doesn't refund
+      // credits: ElevenLabs charges for every character sent, even if the connection closes early.
+      const controller = new AbortController();
+      reply.raw.on("close", () => {
+        if (reply.raw.writableEnded) return;
+        request.log.info("Client disconnected; cancelling speech generation");
+        controller.abort();
+      });
+      return speechService.speak(request.body, controller.signal);
+    },
   );
 };
