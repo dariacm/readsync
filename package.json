@@ -1,0 +1,14 @@
+{
+  "name": "readsync",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=26.12.1"
+  },
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck"
+  }
+}
