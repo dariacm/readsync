@@ -54,3 +54,8 @@ export function wordIndexForKey(key: string, index: number, count: number): numb
       return null;
   }
 }
+
+/** The sentence each token belongs to, by index, for dimming everything but the current sentence. */
+export function sentenceIndexes(sentenceStarts: number[], tokenStarts: number[]): number[] {
+  return tokenStarts.map((start) => sentenceIndexAt(sentenceStarts, start));
+}

@@ -1,9 +1,11 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { MAX_TEXT_LENGTH, splitIntoChunks, type TextChunk } from "@readsync/shared";
 import { fetchDemoText } from "./api";
 import { MoonIcon, PlayIcon, SunIcon, WaveIcon } from "./icons";
 import { loadSpeed, saveSpeed } from "./playbackSpeed";
 import { ReadAlong } from "./ReadAlong";
+import { ReadingSettingsPanel } from "./ReadingSettingsPanel";
+import { useReadingSettings } from "./readingSettings";
 import { useTheme } from "./theme";
 
 interface Session {
@@ -21,6 +23,33 @@ export function App() {
   const [speed, setSpeed] = useState(loadSpeed);
   const { theme, toggleTheme } = useTheme();
   const themeLabel = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+  // In the header, not the player, so readers can set them up before reading anything.
+  const { settings, updateSettings } = useReadingSettings();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const settingsButtonRef = useRef<HTMLButtonElement>(null);
+  const settingsPanelRef = useRef<HTMLDivElement>(null);
+
+  // Close the settings on Escape (returning focus to their button) or on a click outside them.
+  useEffect(() => {
+    if (!settingsOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setSettingsOpen(false);
+      settingsButtonRef.current?.focus();
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      const target = e.target as Node;
+      if (!settingsPanelRef.current?.contains(target) && !settingsButtonRef.current?.contains(target)) {
+        setSettingsOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [settingsOpen]);
 
   const changeSpeed = (value: number) => {
     setSpeed(value);
@@ -54,9 +83,31 @@ export function App() {
             <WaveIcon className="brand-mark" />
             ReadSync
           </div>
-          <button type="button" className="icon-button" onClick={toggleTheme} aria-label={themeLabel} title={themeLabel}>
-            {theme === "dark" ? <SunIcon /> : <MoonIcon />}
-          </button>
+          <div className="topbar-actions">
+            <button
+              ref={settingsButtonRef}
+              type="button"
+              className="icon-button text-icon"
+              onClick={() => setSettingsOpen((open) => !open)}
+              aria-label="Reading settings"
+              title="Reading settings"
+              aria-expanded={settingsOpen}
+              aria-controls="reading-settings"
+            >
+              Aa
+            </button>
+            <button type="button" className="icon-button" onClick={toggleTheme} aria-label={themeLabel} title={themeLabel}>
+              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+            </button>
+          </div>
+          {settingsOpen && (
+            <ReadingSettingsPanel
+              ref={settingsPanelRef}
+              id="reading-settings"
+              settings={settings}
+              onChange={updateSettings}
+            />
+          )}
         </div>
       </header>
 
@@ -112,6 +163,7 @@ export function App() {
             chunks={session.chunks}
             speed={speed}
             onSpeedChange={changeSpeed}
+            settings={settings}
           />
         )}
       </main>

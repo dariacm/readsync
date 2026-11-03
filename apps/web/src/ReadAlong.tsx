@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type FocusEvent, type KeyboardEvent, type ReactNode } from "react";
 import type { TextChunk } from "@readsync/shared";
 import { NextIcon, PauseIcon, PlayIcon, PreviousIcon } from "./icons";
 import { SPEEDS } from "./playbackSpeed";
-import { wordIndexForKey } from "./readerPosition";
+import type { ReadingSettings } from "./readingSettings";
+import { sentenceIndexes, wordIndexForKey } from "./readerPosition";
 import { useChunkedReader } from "./useChunkedReader";
 
 interface ReadAlongProps {
@@ -10,12 +11,20 @@ interface ReadAlongProps {
   chunks: TextChunk[];
   speed: number;
   onSpeedChange: (speed: number) => void;
+  settings: ReadingSettings;
 }
 
-export function ReadAlong({ text, chunks, speed, onSpeedChange }: ReadAlongProps) {
+export function ReadAlong({ text, chunks, speed, onSpeedChange, settings }: ReadAlongProps) {
   const reader = useChunkedReader(text, chunks, speed);
   const sectionRef = useRef<HTMLElement>(null);
   const playButtonRef = useRef<HTMLButtonElement>(null);
+
+  // For sentence focus: which sentence each word belongs to, and which one is being read.
+  const wordSentences = useMemo(
+    () => sentenceIndexes(reader.sentenceStarts, reader.tokens.map((t) => t.charStart)),
+    [reader.sentenceStarts, reader.tokens],
+  );
+  const currentSentence = reader.sentence.current - 1;
 
   // A new text mounts a new player: bring it into view and move focus to play/pause, so readers
   // don't have to scroll down from the text box, and keyboard users can pause with Space right away.
@@ -74,7 +83,13 @@ export function ReadAlong({ text, chunks, speed, onSpeedChange }: ReadAlongProps
     segments.push(
       <span
         key={i}
-        className={i === reader.activeTokenIndex ? "word active" : "word"}
+        className={[
+          "word",
+          i === reader.activeTokenIndex && "active",
+          settings.sentenceFocus && wordSentences[i] !== currentSentence && "dimmed",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         tabIndex={i === tabbableWord ? 0 : -1}
         data-index={i}
         onFocus={() => setFocusedWord(i)}
@@ -90,7 +105,15 @@ export function ReadAlong({ text, chunks, speed, onSpeedChange }: ReadAlongProps
   const playLabel = reader.isPlaying ? "Pause" : "Play";
 
   return (
-    <section ref={sectionRef} className="card reader" aria-label="Read-along">
+    <section
+      ref={sectionRef}
+      className="card reader"
+      aria-label="Read-along"
+      data-size={settings.size}
+      data-font={settings.font}
+      data-highlight={settings.highlight}
+      data-colours={settings.colours}
+    >
       <audio ref={reader.audioRef} preload="auto" />
 
       <div className="player">
@@ -129,21 +152,23 @@ export function ReadAlong({ text, chunks, speed, onSpeedChange }: ReadAlongProps
           <div className="progress-track" aria-hidden="true">
             <div className="progress-fill" style={{ transform: `scaleX(${progressRef.current})` }} />
           </div>
-          <span className="muted small" role="status" aria-live="polite">
-            {reader.isLoading ? (
-              <span className="loading">
-                <span className="spinner" aria-hidden="true" /> Generating speech…
-              </span>
-            ) : reader.sentence.total > 1 ? (
-              `Sentence ${reader.sentence.current} of ${reader.sentence.total}`
-            ) : null}
-          </span>
+          <div className="progress-meta">
+            <span className="muted small" role="status" aria-live="polite">
+              {reader.isLoading ? (
+                <span className="loading">
+                  <span className="spinner" aria-hidden="true" /> Generating speech…
+                </span>
+              ) : reader.sentence.total > 1 ? (
+                `Sentence ${reader.sentence.current} of ${reader.sentence.total}`
+              ) : null}
+            </span>
+          </div>
         </div>
 
-        <fieldset className="speed">
+        <fieldset className="pills speed">
           <legend className="visually-hidden">Speed</legend>
           {SPEEDS.map((s) => (
-            <label key={s} className={s === speed ? "speed-option selected" : "speed-option"}>
+            <label key={s} className={s === speed ? "pill selected" : "pill"}>
               <input
                 type="radio"
                 name="speed"

@@ -233,6 +233,7 @@ export function useChunkedReader(text: string, chunks: TextChunk[], speed: numbe
     retry: () => load(current),
     // Chunks are an internal detail; readers see their position in sentences.
     sentence: { current: sentenceIndexAt(sentenceStarts, position) + 1, total: sentenceStarts.length },
+    sentenceStarts,
     togglePlay,
     previousSentence,
     nextSentence,

@@ -19,7 +19,10 @@
   --radius: 16px;
 
   color-scheme: light;
-  font-family: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-default: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-hyperlegible: "Atkinson Hyperlegible Next Variable", "Inter Variable", system-ui, sans-serif;
+
+  font-family: var(--font-default);
   font-size: 1.0625rem;
   line-height: 1.6;
   color: var(--text);
@@ -295,8 +298,215 @@ textarea {
   transition: transform 200ms linear;
 }
 
-.player-progress [role="status"] {
-  min-height: 1.4em;
+.progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 1.75rem;
+}
+
+/* Reading settings: a dropdown under the header button */
+
+.topbar-inner {
+  position: relative;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.icon-button.text-icon {
+  font-size: 0.9375rem;
+  font-weight: 650;
+}
+
+.icon-button[aria-expanded="true"] {
+  background: var(--surface-muted);
+}
+
+.settings-popover {
+  position: absolute;
+  top: calc(100% - 0.25rem);
+  right: 1rem;
+  z-index: 10;
+  width: min(36rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 6rem);
+  overflow: auto;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
+}
+
+.settings-preview .reading {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.settings-preview .word {
+  cursor: default;
+}
+
+.reading-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem 1.5rem;
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.setting {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.setting legend {
+  margin-bottom: 0.375rem;
+  padding: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.reading-settings .pills {
+  flex-wrap: wrap;
+  width: fit-content;
+  border-radius: 14px;
+}
+
+.reading-settings .pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.875rem;
+}
+
+/* ⓘ next to a setting's name, showing its explanation in a bubble */
+
+.setting legend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.info-tip {
+  position: relative;
+  display: inline-flex;
+}
+
+.info-button {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.info-button:hover,
+.info-button[aria-expanded="true"] {
+  color: var(--text);
+}
+
+.info-bubble {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  z-index: 20;
+  width: max-content;
+  max-width: 15rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.14);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: left;
+  transform: translateX(-50%);
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 120ms,
+    visibility 120ms;
+  pointer-events: none;
+}
+
+/* The little arrow pointing down at the ⓘ */
+.info-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-right: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border-strong);
+  background: var(--surface);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.info-tip:not([data-dismissed="true"]):hover .info-bubble,
+.info-tip[data-open="true"]:not([data-dismissed="true"]) .info-bubble {
+  visibility: visible;
+  opacity: 1;
+}
+
+.settings-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 1.25rem 1rem;
+}
+
+/* Previews in the highlight and colour pills */
+
+.sample {
+  padding: 0 0.25em;
+  border-radius: 0.25em;
+}
+
+.sample-marker {
+  background: var(--highlight);
+  color: var(--on-highlight);
+  text-decoration: underline 0.1em var(--on-highlight);
+  text-underline-offset: 0.14em;
+}
+
+.sample-outline {
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+
+.sample-inverted {
+  background: var(--text);
+  color: var(--surface);
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-right: 0.375rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+}
+
+.swatch-paper {
+  background: #fbf8f1;
+}
+
+.swatch-contrast {
+  background: linear-gradient(135deg, #ffffff 50%, #000000 50%);
+}
+
+.swatch-blue {
+  background: #e6eff8;
 }
 
 .loading {
@@ -320,7 +530,7 @@ textarea {
   }
 }
 
-.speed {
+.pills {
   display: flex;
   gap: 2px;
   margin: 0;
@@ -330,7 +540,7 @@ textarea {
   background: var(--surface-muted);
 }
 
-.speed-option {
+.pill {
   padding: 0.25rem 0.625rem;
   border-radius: 999px;
   font-size: 0.875rem;
@@ -340,14 +550,14 @@ textarea {
   cursor: pointer;
 }
 
-.speed-option.selected {
+.pill.selected {
   background: var(--surface);
   color: var(--text);
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
 }
 
 /* Radio inputs are visually hidden, so show keyboard focus on their pill. */
-.speed-option:has(:focus-visible) {
+.pill:has(:focus-visible) {
   outline: 3px solid var(--focus);
   outline-offset: 1px;
 }
@@ -393,7 +603,9 @@ textarea {
   margin: 0;
   padding: clamp(1.25rem, 4vw, 2rem);
   background: var(--reading-bg);
-  font-size: 1.375rem;
+  color: var(--reading-text, var(--text));
+  font-family: var(--reading-font, var(--font-default));
+  font-size: var(--reading-size, 1.375rem);
   line-height: 1.9;
   letter-spacing: 0.02em;
   word-spacing: 0.12em;
@@ -405,7 +617,9 @@ textarea {
   margin: 0 -0.1em;
   border-radius: 0.3em;
   cursor: pointer;
-  transition: background-color 120ms;
+  transition:
+    background-color 120ms,
+    opacity 200ms;
 }
 
 /* Keyboard focus scrolls a word into view; keep it clear of the sticky player above. */
@@ -433,6 +647,63 @@ textarea {
   text-decoration-skip-ink: none;
 }
 
+/* Reading settings, set as data attributes on the reader. */
+
+.reader[data-size="large"] {
+  --reading-size: 1.75rem;
+}
+
+.reader[data-size="x-large"] {
+  --reading-size: 2.125rem;
+}
+
+.reader[data-size="huge"] {
+  --reading-size: 2.625rem;
+}
+
+.reader[data-font="hyperlegible"] {
+  --reading-font: var(--font-hyperlegible);
+}
+
+.reader[data-colours="contrast"] {
+  --reading-bg: #ffffff;
+  --reading-text: #000000;
+}
+
+:root[data-theme="dark"] .reader[data-colours="contrast"] {
+  --reading-bg: #000000;
+  --reading-text: #ffffff;
+}
+
+.reader[data-colours="blue"] {
+  --reading-bg: #e6eff8;
+  --reading-text: #0f2236;
+}
+
+:root[data-theme="dark"] .reader[data-colours="blue"] {
+  --reading-bg: #0e1a28;
+  --reading-text: #e3ecf6;
+}
+
+/* Alternative highlight styles; like the marker, neither depends on telling colours apart. */
+.reader[data-highlight="outline"] .word.active {
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: inset 0 0 0 0.12em currentColor;
+}
+
+.reader[data-highlight="inverted"] .word.active {
+  background: var(--reading-text, var(--text));
+  color: var(--reading-bg);
+  text-decoration: none;
+}
+
+/* Sentence focus: everything but the sentence being read fades back. */
+.word.dimmed {
+  opacity: 0.3;
+}
+
 /* Phones: buttons and speed on one row, progress below, so the sticky player stays compact. */
 @media (max-width: 480px) {
   .container {
@@ -455,7 +726,7 @@ textarea {
     padding: 0.625rem;
   }
 
-  .speed {
+  .player .pills {
     gap: 0;
   }
 
@@ -468,7 +739,7 @@ textarea {
     flex-basis: 100%;
   }
 
-  .speed-option {
+  .player .pill {
     padding: 0.25rem 0.4rem;
     font-size: 0.8125rem;
   }

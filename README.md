@@ -30,18 +30,18 @@ Today, the reader:
 - Scrolls to the reader and moves focus to play/pause when reading starts, so keyboard users can pause with Space right away.
 - Works fully from the keyboard: the text is a single Tab stop that lands on the word being read; the arrow keys, Home and End move between words, Enter reads from the focused word, and Space pauses or resumes, so keyboard users never have to leave the text.
 - Has a light/dark toggle that follows the system until changed and remembers the choice (dark mode uses a dark grey reading area rather than black, to reduce glare), respects reduced-motion settings, and keeps the player controls in view while scrolling a long text.
+- Has reading settings (the **Aa** button in the header, with a live preview), remembered across visits: four text sizes; the Atkinson Hyperlegible font, designed for low-vision readers; three highlight styles that don't depend on colour (marker, outline, inverted); three colour themes (paper, high contrast, blue tint), each with light and dark versions; and sentence focus, which dims everything but the sentence being read. One click resets them all.
 - Expands numbers, currencies and common abbreviations into natural speech ("£3,500.75", "i.e.").
 
 Known gaps:
 
-- Reading settings aren't adjustable yet: font, text size, line focus, and colours such as the highlight style and background, which would help readers with colour vision deficiency or who need higher contrast.
 - Abbreviation rules exist for English only, and words are split on spaces, which doesn't work for languages like Japanese.
 - Texts are limited to 20,000 characters, as a guard on credits.
 
 ## Next 🔮
 
 - **Multilingual support:** a language picker that chooses a matching voice and that language's abbreviation rules, word splitting with `Intl.Segmenter` so languages without spaces (like Japanese) highlight word by word, and a translated interface.
-- **Colour vision deficiency and contrast:** reading settings with highlight styles that don't depend on colour (underline, outline, inverted), high-contrast and tinted colour themes, plus font, text size and a line-focus mode.
+- **More reading settings, tested with readers:** line and letter spacing, a reading ruler that follows the current line, and custom colours, then trying the settings with people who have dyslexia, low vision or colour vision deficiency, to learn which ones actually help.
 - **Voices and tones:** choosing from different voices and tones, from calm and slow to lively, so readers can pick the one they find easiest to follow.
 - **PDF and e-book upload:** reading PDFs and e-books (such as EPUB) directly, keeping chapters and paragraphs, and remembering where the reader left off. Longer texts would also need audio caching across visits, to avoid paying for the same pages twice.
 

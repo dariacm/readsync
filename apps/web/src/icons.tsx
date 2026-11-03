@@ -62,3 +62,11 @@ export const MoonIcon = (props: IconProps) => (
     <path d="M20.2 14.6A8.5 8.5 0 0 1 9.4 3.8a.6.6 0 0 0-.79-.72A9.5 9.5 0 1 0 20.92 15.4a.6.6 0 0 0-.72-.8Z" />
   </Icon>
 );
+
+export const InfoIcon = (props: IconProps) => (
+  <Icon {...props} fill="none">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M12 11v5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <circle cx="12" cy="7.75" r="1.15" fill="currentColor" />
+  </Icon>
+);

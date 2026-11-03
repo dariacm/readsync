@@ -6,6 +6,7 @@ import {
   previousSentenceStart,
   sentenceIndexAt,
   startTimeAt,
+  sentenceIndexes,
   wordIndexForKey,
 } from "./readerPosition";
 
@@ -82,5 +83,12 @@ describe("wordIndexForKey", () => {
   it("ignores other keys", () => {
     expect(wordIndexForKey("Enter", 2, 5)).toBeNull();
     expect(wordIndexForKey("a", 2, 5)).toBeNull();
+  });
+});
+
+describe("sentenceIndexes", () => {
+  it("assigns each token to the sentence it starts in", () => {
+    // "One two. Three four. Five." sentences start at 0, 9 and 21
+    expect(sentenceIndexes([0, 9, 21], [0, 4, 9, 15, 21])).toEqual([0, 0, 1, 1, 2]);
   });
 });
