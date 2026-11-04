@@ -70,3 +70,11 @@ export const InfoIcon = (props: IconProps) => (
     <circle cx="12" cy="7.75" r="1.15" fill="currentColor" />
   </Icon>
 );
+
+export const WarningIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M10.3 3.7a2 2 0 0 1 3.4 0l8 13.9A2 2 0 0 1 20 20.5H4a2 2 0 0 1-1.7-2.9l8-13.9Z" />
+    <rect x="11" y="8.5" width="2" height="6.5" rx="1" fill="var(--surface, #fff)" />
+    <circle cx="12" cy="17.4" r="1.15" fill="var(--surface, #fff)" />
+  </Icon>
+);

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { MAX_TEXT_LENGTH, splitIntoChunks, type TextChunk } from "@readsync/shared";
 import { fetchDemoText } from "./api";
-import { MoonIcon, PlayIcon, SunIcon, WaveIcon } from "./icons";
+import { MoonIcon, PlayIcon, SunIcon, WarningIcon, WaveIcon } from "./icons";
 import { loadSpeed, saveSpeed } from "./playbackSpeed";
 import { ReadAlong } from "./ReadAlong";
 import { ReadingSettingsPanel } from "./ReadingSettingsPanel";
 import { useReadingSettings } from "./readingSettings";
+import { textLengthStatus } from "./textLimit";
 import { useTheme } from "./theme";
 
 interface Session {
@@ -68,8 +69,21 @@ export function App() {
     };
   }, []);
 
+  // The text is never cut off at the limit (a silently truncated paste would lose its ending);
+  // instead the counter explains how much to shorten, and reading waits until it fits.
+  const lengthStatus = textLengthStatus(text.length, MAX_TEXT_LENGTH);
+  // The wording changes with the state, so the warning doesn't rely on colour alone.
+  const remaining = MAX_TEXT_LENGTH - text.length;
+  const counterText =
+    lengthStatus === "over"
+      ? `${(-remaining).toLocaleString()} ${-remaining === 1 ? "character" : "characters"} over`
+      : lengthStatus === "near"
+        ? `${remaining.toLocaleString()} ${remaining === 1 ? "character" : "characters"} left`
+        : `${text.length.toLocaleString()} / ${MAX_TEXT_LENGTH.toLocaleString()} characters`;
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (lengthStatus === "over") return;
     const chunks = splitIntoChunks(text);
     if (chunks.length === 0) return;
     setSession((prev) => ({ id: (prev?.id ?? 0) + 1, text, chunks }));
@@ -138,17 +152,22 @@ export function App() {
             id="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            maxLength={MAX_TEXT_LENGTH}
             readOnly={demoText !== null}
+            aria-invalid={lengthStatus === "over"}
             rows={6}
             placeholder="Paste or type the text you'd like to hear…"
             aria-describedby="text-length"
           />
           <div className="composer-footer">
-            <span id="text-length" className="muted small">
-              {text.length.toLocaleString()} / {MAX_TEXT_LENGTH.toLocaleString()} characters
+            <span id="text-length" className={`text-count small ${lengthStatus}`}>
+              {lengthStatus === "over" && <WarningIcon width={16} height={16} />}
+              <span>{counterText}</span>
             </span>
-            <button type="submit" className="button primary" disabled={!text.trim()}>
+            {/* Announced once when the text goes over the limit, not on every keystroke after that. */}
+            <span className="visually-hidden" role="status" aria-live="polite">
+              {lengthStatus === "over" ? `The text is over the ${MAX_TEXT_LENGTH.toLocaleString()} character limit.` : ""}
+            </span>
+            <button type="submit" className="button primary" disabled={!text.trim() || lengthStatus === "over"}>
               <PlayIcon width={16} height={16} />
               Read aloud
             </button>

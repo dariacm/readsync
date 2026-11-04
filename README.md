@@ -36,7 +36,7 @@ Today, the reader:
 Known gaps:
 
 - Abbreviation rules exist for English only, and words are split on spaces, which doesn't work for languages like Japanese.
-- Texts are limited to 20,000 characters, as a guard on credits.
+- Texts are limited to 20,000 characters, as a guard on credits. Longer texts aren't cut off: the counter turns red and says how much to shorten.
 
 ## Next 🔮
 
