@@ -9,11 +9,18 @@ const envSchema = z
     ELEVENLABS_VOICE_ID: z.string().default("JBFqnCBsd6RMkjVDRZzb"),
     ELEVENLABS_MODEL_ID: z.string().default("eleven_multilingual_v2"),
     ELEVENLABS_PRONUNCIATION_DICTIONARY_ID_EN: z.string().min(1).optional(),
+    SUPABASE_URL: z.url().optional(),
+    SUPABASE_SECRET_KEY: z.string().min(1).optional(),
+    SUPABASE_SPEECH_BUCKET: z.string().min(1).default("speech-cache"),
     PORT: z.coerce.number().int().default(8787),
   })
   .refine((env) => env.READSYNC_DEMO || env.ELEVENLABS_API_KEY, {
     path: ["ELEVENLABS_API_KEY"],
     message: "Copy .env.example to .env and add your ElevenLabs API key, or run `pnpm dev:demo` to try it without one.",
+  })
+  .refine((env) => !env.SUPABASE_URL === !env.SUPABASE_SECRET_KEY, {
+    path: ["SUPABASE_SECRET_KEY"],
+    message: "Set both SUPABASE_URL and SUPABASE_SECRET_KEY to cache speech, or neither to run without a cache.",
   });
 
 export interface Config {
@@ -25,6 +32,12 @@ export interface Config {
     modelId: string;
     /** Created with `pnpm dictionary:create <language>`; expands abbreviations like "e.g.". */
     pronunciationDictionaryIds: Partial<Record<DictionaryLanguage, string>>;
+  };
+  speechCache?: {
+    url: string;
+    /** Bypasses Supabase's access rules: server-only. */
+    secretKey: string;
+    bucket: string;
   };
   port: number;
 }
@@ -43,6 +56,10 @@ export function getConfig(env: NodeJS.ProcessEnv = process.env): Config {
       modelId: parsed.ELEVENLABS_MODEL_ID,
       pronunciationDictionaryIds: { en: parsed.ELEVENLABS_PRONUNCIATION_DICTIONARY_ID_EN },
     },
+    speechCache:
+      parsed.SUPABASE_URL && parsed.SUPABASE_SECRET_KEY
+        ? { url: parsed.SUPABASE_URL, secretKey: parsed.SUPABASE_SECRET_KEY, bucket: parsed.SUPABASE_SPEECH_BUCKET }
+        : undefined,
     port: parsed.PORT,
   };
 }

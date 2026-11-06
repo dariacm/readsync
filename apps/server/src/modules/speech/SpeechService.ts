@@ -4,6 +4,9 @@ import type { Config } from "../../infrastructure/config.js";
 import { PublicError } from "../../infrastructure/errors.js";
 import { toWordTimings } from "./alignment.js";
 
+/** "auto" can leave currencies half-read ("3,500.75" without "pounds"); "on" always expands them. */
+export const TEXT_NORMALIZATION = "on";
+
 export interface SpeechService {
   /** Aborting `signal` cancels the ElevenLabs request, e.g. when the client has gone away. */
   speak(request: SpeakRequest, signal?: AbortSignal): Promise<SpeakResponse>;
@@ -32,8 +35,7 @@ export class ElevenLabsSpeechService implements SpeechService {
           modelId,
           previousText,
           nextText,
-          // "auto" can leave currencies half-read ("3,500.75" without "pounds"); "on" always expands them.
-          applyTextNormalization: "on",
+          applyTextNormalization: TEXT_NORMALIZATION,
           pronunciationDictionaryLocators: pronunciationDictionaryId
             ? [{ pronunciationDictionaryId }]
             : undefined,
