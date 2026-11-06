@@ -43,7 +43,7 @@ Known gaps:
 - **Multilingual support:** a language picker that chooses a matching voice and that language's abbreviation rules, word splitting with `Intl.Segmenter` so languages without spaces (like Japanese) highlight word by word, and a translated interface.
 - **More reading settings, tested with readers:** line and letter spacing, a reading ruler that follows the current line, and custom colours, then trying the settings with people who have dyslexia, low vision or colour vision deficiency, to learn which ones actually help.
 - **Voices and tones:** choosing from different voices and tones, from calm and slow to lively, so readers can pick the one they find easiest to follow.
-- **PDF and e-book upload:** reading PDFs and e-books (such as EPUB) directly, keeping chapters and paragraphs, and remembering where the reader left off. Longer texts would also need audio caching across visits, to avoid paying for the same pages twice.
+- **PDF and e-book upload:** reading PDFs and e-books (such as EPUB) directly, keeping chapters and paragraphs, and remembering where the reader left off. The [speech cache](#optional-speech-cache) already avoids paying twice for pages read again.
 
 ## How it works 👩‍🔬
 
@@ -96,6 +96,28 @@ pnpm --filter @readsync/server dictionary:create en
 
 The rules live in [`pronunciationRules.ts`](apps/server/src/modules/speech/pronunciationRules.ts), keyed by language. Only English exists so far, and every text is treated as English. Running the script again creates a new dictionary, so update the ID after changing the rules.
 
+### Optional: speech cache
+
+Every request to ElevenLabs is charged, even when it's the same text read again. With a free [Supabase](https://supabase.com) project, the server keeps the speech it generates in Supabase Storage and replays it when the same chunk is read again, with the same context, voice, model and dictionary, so a second read costs no credits.
+
+1. Create a Supabase project and, under Storage, a **private** bucket named `speech-cache`.
+2. Add the project URL and a secret key (Project Settings → API Keys) to `apps/server/.env`:
+
+   ```bash
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_SECRET_KEY=your-secret-key
+   ```
+
+3. Restart the server. It logs `Caching speech in the Supabase bucket "speech-cache"` once it has opened the bucket, or an error saying why it couldn't.
+
+Without these variables, the server runs without a cache. The cache only saves credits and never stops reading: if Supabase is unreachable (a free project pauses after a week without use), the server logs it and calls ElevenLabs as usual.
+
+Each chunk is stored as two files named by a hash: the MP3 and its word timings. The names don't contain the text, but the files do, so the cache is meant for your own installation, not one shared with other people. Supabase can't delete files by age, so prune old ones by hand:
+
+```bash
+pnpm --filter @readsync/server cache:prune --days 30
+```
+
 ## Scripts 🤖
 
 | Command                                               | What it does                                                                                |
@@ -106,6 +128,7 @@ The rules live in [`pronunciationRules.ts`](apps/server/src/modules/speech/pronu
 | `pnpm typecheck`                                      | Type-check every package                                                                    |
 | `pnpm --filter @readsync/server dictionary:create en` | Create a language's abbreviation dictionary in ElevenLabs                                   |
 | `pnpm --filter @readsync/server demo:record`          | Re-record the demo sample from ElevenLabs (uses credits; `--dry-run` shows the chunks only) |
+| `pnpm --filter @readsync/server cache:prune`          | Delete cached speech older than 30 days (`--days` to change it, `--dry-run` to only count)  |
 
 ## Learnings 🧠
 
