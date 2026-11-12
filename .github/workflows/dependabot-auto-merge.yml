@@ -1,0 +1,29 @@
+name: Dependabot auto-merge
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Enable auto-merge
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'dariacm/readsync'
+    env:
+      PR_URL: ${{ github.event.pull_request.html_url }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - id: metadata
+        uses: dependabot/fetch-metadata@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Merges once the required checks on main pass; CI failures are handled by dependabot-notifications.yml.
+      - if: contains(fromJSON('["version-update:semver-minor", "version-update:semver-patch"]'), steps.metadata.outputs.update-type)
+        run: gh pr merge --auto --squash "$PR_URL"
+
+      # Major updates are never auto-merged, even when CI passes.
+      - if: ${{ !contains(fromJSON('["version-update:semver-minor", "version-update:semver-patch"]'), steps.metadata.outputs.update-type) }}
+        run: gh pr edit "$PR_URL" --add-reviewer dariacm
