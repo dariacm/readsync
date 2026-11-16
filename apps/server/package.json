@@ -20,7 +20,7 @@
     "vitest": "^5.1.0"
   },
   "dependencies": {
-    "@elevenlabs/elevenlabs-js": "^2.76.0",
+    "@elevenlabs/elevenlabs-js": "^2.77.0",
     "@readsync/shared": "workspace:*",
     "@supabase/supabase-js": "^2.119.0",
     "fastify": "^5.12.8",
